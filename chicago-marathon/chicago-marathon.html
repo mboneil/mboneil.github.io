@@ -24,6 +24,7 @@
         background-color: #FF8080;
         margin-top: 30px;
       }
+
     </style>
     <script type="text/javascript"
       src="https://maps.googleapis.com/maps/api/js">
@@ -77,11 +78,15 @@
         }
       ];
 
+      var greenMarker = 'http://maps.google.com/mapfiles/ms/icons/green-dot.png';
+      var yellowMarker = 'http://maps.google.com/mapfiles/ms/icons/yellow-dot.png';
+      var redMarker = 'http://maps.google.com/mapfiles/ms/icons/red-dot.png';
+
       // source: http://codepen.io/KryptoniteDove/blog/load-json-file-locally-using-pure-javascript
-      function loadJSON(callback) {   
+      function loadJSON(url, callback) {   
         var xobj = new XMLHttpRequest();
             xobj.overrideMimeType("application/json");
-        xobj.open('GET', '/chicago-marathon/route.json', true); // Path to json file is HARDCODED!!!!
+        xobj.open('GET', url, true); // Path to json file is HARDCODED!!!!
         xobj.onreadystatechange = function () {
               if (xobj.readyState == 4 && xobj.status == "200") {
                 // Required use of an anonymous callback as .open will NOT return a value but simply returns undefined in asynchronous mode
@@ -120,7 +125,7 @@
 
 
         // load the course data and draw it on the map
-        loadJSON(function(response) {
+        loadJSON('/chicago-marathon/route.json',function(response) {
             // Parse JSON string into object
             var route = JSON.parse(response);
 
@@ -134,7 +139,7 @@
               routeSegments[i] = new google.maps.Polyline({
                 path: segmentCoordinates,
                 geodesic: true,
-                strokeColor: '#0000FF',           // decides teh color of this segment of the route
+                strokeColor: '#0000FF',           // decides the color of this segment of the route
                 strokeOpacity: 1.0,
                 // as a test randomly vary the segment line thickness
                 strokeWeight: Math.random()*segmentWidthVariance + 2 // decides the width of this segment of the route
@@ -146,8 +151,37 @@
 
             // set it so route segments will change widths every three seconds to emulate changing race conditions
             setInterval(changeRouteWidths, 3000);
-         });
+        });
 
+        loadJSON('/chicago-marathon/aid-stations.json',function(response) {
+            // Parse JSON string into object
+            var stations = JSON.parse(response);
+            // loop through, create segments and draw them
+            for (var as in stations) {
+              var coordinates = 
+                new google.maps.LatLng(stations[as]['lat'], stations[as]['long']);
+              if (as=="AS3"){
+                new google.maps.Size(30,48);
+                var marker = new google.maps.Marker({
+                  position: coordinates,
+                  icon: redMarker
+                });
+              } else if(as=="AS6" || as=="AS9" || as=="AS14") {
+                var marker = new google.maps.Marker({
+                  position: coordinates,
+                  icon: yellowMarker
+                });
+              }
+              else {
+                var marker = new google.maps.Marker({
+                  position: coordinates,
+                  icon: greenMarker
+                });
+              }
+              marker.setMap(map);
+            }
+
+        });
       }
 
       // load map once window is loaded
@@ -161,7 +195,7 @@
   <p><img src="/chicago-marathon/Sunny.png" style="height:25px;">  45&deg;F</p>
   <p><strong>Official Time:</strong> 8:15am</p>
   <p><strong>Race Time:</strong> 00:45</p>
-  <p><img src="/chicago-marathon/runner.gif" style="height:25px;"> lead pace time ??:??</p>
+  <p><img src="/chicago-marathon/runner.gif" style="height:25px;"> lead pace ??:??</p>
 </div>
 <div class="legend" id="msg-legend">
   <h2>IMPORTANT MESSAGES</h2>
