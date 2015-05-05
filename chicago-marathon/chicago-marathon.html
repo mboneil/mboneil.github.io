@@ -81,7 +81,7 @@
       function loadJSON(callback) {   
         var xobj = new XMLHttpRequest();
             xobj.overrideMimeType("application/json");
-        xobj.open('GET', '/route.json', true); // Path to json file is HARDCODED!!!!
+        xobj.open('GET', '/chicago-marathon/route.json', true); // Path to json file is HARDCODED!!!!
         xobj.onreadystatechange = function () {
               if (xobj.readyState == 4 && xobj.status == "200") {
                 // Required use of an anonymous callback as .open will NOT return a value but simply returns undefined in asynchronous mode
@@ -158,10 +158,10 @@
 <div id="map-canvas"></div>
 <div class="legend" id="weather-legend">
   <div id="flag"></div>
-  <p><img src="/sunny.png" style="height:25px;">  45&deg;F</p>
+  <p><img src="/chicago-marathon/sunny.png" style="height:25px;">  45&deg;F</p>
   <p><strong>Official Time:</strong> 8:15am</p>
   <p><strong>Race Time:</strong> 00:45</p>
-  <p><img src="/runner.gif" style="height:25px;"> lead pace time ??:??</p>
+  <p><img src="/chicago-marathon/runner.gif" style="height:25px;"> lead pace time ??:??</p>
 </div>
 <div class="legend" id="msg-legend">
   <h2>IMPORTANT MESSAGES</h2>
